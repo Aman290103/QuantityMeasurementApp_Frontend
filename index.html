@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Quantity Nexus</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dash-page">
+    <div id="toast-container" class="toast-container"></div>
+
+    <main id="app">
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="container">
+            <header class="dash-header">
+                <div class="dash-user">
+                    <div class="avatar" id="user-avatar">AD</div>
+                    <div class="greeting">
+                        <p>Welcome back,</p>
+                        <h2 id="display-name">Aman</h2>
+                    </div>
+                </div>
+                <div class="dash-nav">
+                    <a href="index.html" class="nav-link active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                    <a href="history.html" class="nav-link"><i data-lucide="history"></i> History</a>
+                </div>
+                <button id="logout-btn" class="btn btn-ghost">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </header>
+
+            <div class="dash-grid">
+                <!-- Unit Types Sidebar -->
+                <div class="sidebar glass-card">
+                    <h3>Quantity Type</h3>
+                    <div class="type-grid" id="unit-types">
+                        <button class="type-btn active" data-unit="Length">
+                            <i data-lucide="ruler"></i>
+                            <span>Length</span>
+                        </button>
+                        <button class="type-btn" data-unit="Weight">
+                            <i data-lucide="weight"></i>
+                            <span>Weight</span>
+                        </button>
+                        <button class="type-btn" data-unit="Temperature">
+                            <i data-lucide="thermometer-sun"></i>
+                            <span>Temp</span>
+                        </button>
+                        <button class="type-btn" data-unit="Volume">
+                            <i data-lucide="droplet"></i>
+                            <span>Volume</span>
+                        </button>
+                        <button class="type-btn" data-unit="Area">
+                            <i data-lucide="layers"></i>
+                            <span>Area</span>
+                        </button>
+                        <button class="type-btn" data-unit="Angle">
+                            <i data-lucide="compass"></i>
+                            <span>Angle</span>
+                        </button>
+                        <button class="type-btn" data-unit="Speed">
+                            <i data-lucide="gauge"></i>
+                            <span>Speed</span>
+                        </button>
+                        <button class="type-btn" data-unit="Time">
+                            <i data-lucide="clock"></i>
+                            <span>Time</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Converter -->
+                <div class="main-card glass-card">
+                    <div class="card-header">
+                        <div class="action-chooser">
+                            <button class="action-btn active" data-action="Conversion">Conversion</button>
+                            <button class="action-btn" data-action="Comparison">Comparison</button>
+                            <button class="action-btn" data-action="Arithmetic">Arithmetic</button>
+                        </div>
+                        <div class="search-box">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="unit-search" placeholder="Search units...">
+                        </div>
+                    </div>
+
+                    <div id="converter-ui" class="converter-content">
+                        <!-- Conversion UI -->
+                        <div class="conversion-group" id="conversion-inputs">
+                            <div class="input-card">
+                                <label>From</label>
+                                <input type="number" id="from-value" class="input-display" value="1">
+                                <select id="from-unit" class="unit-select"></select>
+                            </div>
+                            <div class="swap-icon" id="swap-trigger">
+                                <i data-lucide="arrow-right-left"></i>
+                            </div>
+                            <div class="input-card result-focus">
+                                <label>To</label>
+                                <div id="to-value" class="input-display readonly">---</div>
+                                <select id="to-unit" class="unit-select"></select>
+                            </div>
+                        </div>
+
+                        <!-- Arithmetic UI (Hidden initially) -->
+                        <div class="arithmetic-group hidden" id="arithmetic-inputs">
+                            <div class="multi-row">
+                                <div class="input-card">
+                                    <input type="number" id="val1" class="input-display" placeholder="0">
+                                    <select id="unit1" class="unit-select"></select>
+                                </div>
+                                <div class="op-bubble">
+                                    <select id="calc-op">
+                                        <option value="add">+</option>
+                                        <option value="sub">-</option>
+                                        <option value="div">/</option>
+                                    </select>
+                                </div>
+                                <div class="input-card">
+                                    <input type="number" id="val2" class="input-display" placeholder="0">
+                                    <select id="unit2" class="unit-select"></select>
+                                </div>
+                            </div>
+                            <div class="result-row">
+                                <div class="input-card full">
+                                    <label>Result In</label>
+                                    <div id="calc-result" class="input-display readonly">0.00</div>
+                                    <select id="result-unit" class="unit-select"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/app.js" type="module"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

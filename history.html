@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History | Quantity Nexus</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dash-page">
+    <div id="toast-container" class="toast-container"></div>
+
+    <main id="app">
+        <section class="container">
+            <header class="dash-header">
+                <div class="dash-user">
+                    <div class="avatar" id="user-avatar">AD</div>
+                    <div class="greeting">
+                        <p>Welcome back,</p>
+                        <h2 id="display-name">Aman</h2>
+                    </div>
+                </div>
+                <div class="dash-nav">
+                    <a href="index.html" class="nav-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                    <a href="history.html" class="nav-link active"><i data-lucide="history"></i> History</a>
+                </div>
+                <button id="logout-btn" class="btn btn-ghost">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </header>
+
+            <div class="history-page glass-card">
+                <div class="history-header">
+                    <div>
+                        <h2>Activity Records</h2>
+                        <p class="subtitle">Detailed log of your recent measurements</p>
+                    </div>
+                    <div class="hist-actions">
+                        <button id="export-btn" class="btn btn-primary"><i data-lucide="download"></i> Export Reports</button>
+                        <button id="clear-btn" class="btn btn-outline sm">Clear Activity Log</button>
+                    </div>
+                </div>
+
+                <div class="history-content">
+                    <ul id="history-list" class="history-list full-width">
+                        <!-- Items injected via JS -->
+                        <div class="empty-state">
+                            <i data-lucide="inbox"></i>
+                            <p>No activity records found</p>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { AuthService } from './js/auth.js';
+        const auth = new AuthService();
+        if (!auth.checkAuth(true)) {
+            throw new Error('Unauthorized');
+        }
+
+        import { HistoryService } from './js/history.js';
+        const historyMgr = new HistoryService();
+        
+        document.getElementById('clear-btn').addEventListener('click', () => historyMgr.clear());
+        document.getElementById('export-btn').addEventListener('click', () => historyMgr.export());
+        
+        lucide.createIcons();
+    </script>
+</body>
+</html>

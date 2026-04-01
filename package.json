@@ -1,0 +1,11 @@
+{
+  "name": "quantity-nexus-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "server": "json-server --watch db.json --port 3000",
+    "start": "npm run server"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}

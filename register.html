@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Quantity Nexus</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="auth-page">
+    <div id="toast-container" class="toast-container"></div>
+
+    <main class="container">
+        <div class="auth-wrapper glass-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i data-lucide="scale" class="icon-pulse"></i>
+                    <h1>Quantity<span>Nexus</span></h1>
+                </div>
+            </div>
+
+            <form id="signup-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="user"></i>
+                            <input type="text" id="signup-name" class="form-control" placeholder="Jane Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-mobile">Mobile Number</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="phone"></i>
+                            <input type="tel" id="signup-mobile" class="form-control" placeholder="+1 555-0000" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="signup-email">Email Address</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="mail"></i>
+                            <input type="email" id="signup-email" class="form-control" placeholder="jane@email.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="lock"></i>
+                            <input type="password" id="signup-password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">
+                    <span>Create Free Account</span>
+                    <i data-lucide="user-plus"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign in here</a></p>
+                <div class="divider"><span>OR</span></div>
+                <div class="social-btns">
+                    <button class="btn btn-outline"><i data-lucide="mail"></i> Google</button>
+                    <button class="btn btn-outline"><i data-lucide="facebook"></i> Facebook</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { AuthService } from './js/auth.js';
+        const auth = new AuthService();
+        
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userData = {
+                fullName: document.getElementById('signup-name').value,
+                email: document.getElementById('signup-email').value,
+                mobile: document.getElementById('signup-mobile').value,
+                password: document.getElementById('signup-password').value
+            };
+            
+            if (await auth.signup(userData)) {
+                window.location.href = 'login.html';
+            }
+        });
+        
+        lucide.createIcons();
+    </script>
+</body>
+</html>
