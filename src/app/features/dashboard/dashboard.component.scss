@@ -1,0 +1,7 @@
+// Dashboard component uses global styles.
+// Component-specific overrides live here.
+
+:host { display: block; }
+
+// Ensure the converter content area has minimum height
+.main-card { min-height: 400px; }
