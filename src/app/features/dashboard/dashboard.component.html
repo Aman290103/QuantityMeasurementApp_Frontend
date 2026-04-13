@@ -1,0 +1,206 @@
+<!-- ============================================================
+     Quantity Nexus – Dashboard Template  (UC20 Angular)
+     UC19 equivalent: index.html + app.js DOM manipulation
+
+     Angular template concepts used:
+       @for / @if / @switch  – structural directives (new syntax)
+       [class.active]        – dynamic class binding
+       (click) / (input) / (change)  – event handling
+       [value] / [disabled]  – property binding
+       <app-header>          – component composition / props passing
+     ============================================================ -->
+
+<div class="dash-page-wrap">
+  <div class="container">
+
+    <!-- Shared Header Component (Component composition) -->
+    <app-header
+      [firstName]="authService.firstName()"
+      [initials]="authService.initials()"
+      [isLoggedIn]="authService.isLoggedIn()"
+      (authClick)="onAuthClick()">
+    </app-header>
+
+    <!-- Dashboard Grid -->
+    <div class="dash-grid">
+
+      <!-- ══ Sidebar: Unit Type Selector ══ -->
+      <div class="sidebar glass-card">
+        <h3>Quantity Type</h3>
+        <div class="type-grid">
+
+          @for (ut of unitTypes; track ut.key) {
+            <button
+              class="type-btn"
+              [class.active]="currentType() === ut.key"
+              (click)="switchUnitType(ut.key)">
+              <lucide-icon [name]="ut.icon" [size]="28"></lucide-icon>
+              <span>{{ ut.label }}</span>
+            </button>
+          }
+
+        </div>
+      </div>
+
+      <!-- ══ Main Converter Card ══ -->
+      <div class="main-card glass-card">
+
+        <!-- Card Header: Action chooser + Search -->
+        <div class="card-header">
+          <div class="action-chooser">
+            @for (action of ['Conversion', 'Comparison', 'Arithmetic']; track action) {
+              <button
+                class="action-btn"
+                [class.active]="currentAction() === action"
+                (click)="switchAction(action)">
+                {{ action }}
+              </button>
+            }
+          </div>
+
+          <div class="search-box">
+            <lucide-icon name="search" [size]="16"></lucide-icon>
+            <input
+              type="text"
+              placeholder="Search units…"
+              [value]="searchQuery()"
+              (input)="onSearchChange($any($event.target).value)">
+          </div>
+        </div>
+
+        <!-- ── Conversion UI ── -->
+        @if (currentAction() === 'Conversion' || currentAction() === 'Comparison') {
+          <div class="conversion-group">
+
+            <!-- From -->
+            <div class="input-card">
+              <label>From</label>
+              <input
+                type="number"
+                class="input-display"
+                [value]="fromValue()"
+                (input)="onFromValueChange($any($event.target).value)">
+              <select
+                class="unit-select"
+                [value]="fromUnit()"
+                (change)="onFromUnitChange($any($event.target).value)">
+                @for (u of filteredUnits(); track u) {
+                  <option [value]="u" [selected]="u === fromUnit()">{{ u }}</option>
+                }
+              </select>
+            </div>
+
+            <!-- Swap button -->
+            <div class="swap-icon" (click)="swapUnits()" title="Swap units">
+              <lucide-icon name="arrow-right-left" [size]="20"></lucide-icon>
+            </div>
+
+            <!-- To (result – readonly) -->
+            <div class="input-card">
+              <label>To</label>
+              <div class="input-display readonly">{{ conversionResult() }}</div>
+              <select
+                class="unit-select"
+                [value]="toUnit()"
+                (change)="onToUnitChange($any($event.target).value)">
+                @for (u of filteredUnits(); track u) {
+                  <option [value]="u" [selected]="u === toUnit()">{{ u }}</option>
+                }
+              </select>
+            </div>
+
+          </div>
+        }
+
+        <!-- ── Arithmetic UI ── -->
+        @if (currentAction() === 'Arithmetic') {
+          <div class="arithmetic-group">
+
+            <div class="multi-row">
+
+              <!-- Value 1 -->
+              <div class="input-card">
+                <input
+                  type="number"
+                  class="input-display"
+                  placeholder="0"
+                  [value]="val1()"
+                  (input)="onArithVal1Change($any($event.target).value)">
+                <select
+                  class="unit-select"
+                  [value]="arithUnit1()"
+                  (change)="onArithUnit1Change($any($event.target).value)">
+                  @for (u of filteredUnits(); track u) {
+                    <option [value]="u" [selected]="u === arithUnit1()">{{ u }}</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Operator -->
+              <div class="op-bubble">
+                <select
+                  [value]="arithOp()"
+                  (change)="onArithOpChange($any($event.target).value)">
+                  <option value="add">+</option>
+                  <option value="sub">−</option>
+                  <option value="div">÷</option>
+                </select>
+              </div>
+
+              <!-- Value 2 -->
+              <div class="input-card">
+                <input
+                  type="number"
+                  class="input-display"
+                  placeholder="0"
+                  [value]="val2()"
+                  (input)="onArithVal2Change($any($event.target).value)">
+                <select
+                  class="unit-select"
+                  [value]="arithUnit2()"
+                  (change)="onArithUnit2Change($any($event.target).value)">
+                  @for (u of filteredUnits(); track u) {
+                    <option [value]="u" [selected]="u === arithUnit2()">{{ u }}</option>
+                  }
+                </select>
+              </div>
+
+            </div>
+
+            <!-- Result row -->
+            <div class="result-row">
+              <div class="input-card full">
+                <label>Result In</label>
+                <div class="input-display readonly">{{ arithmeticResult() }}</div>
+                <select
+                  class="unit-select"
+                  [disabled]="resultUnitDisabled()"
+                  [style.opacity]="resultUnitDisabled() ? '0.4' : '1'"
+                  [value]="resultUnit()"
+                  (change)="onResultUnitChange($any($event.target).value)">
+                  @for (u of filteredUnits(); track u) {
+                    <option [value]="u" [selected]="u === resultUnit()">{{ u }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+          </div>
+        }
+
+        <!-- Temperature notice for Arithmetic -->
+        @if (currentAction() === 'Arithmetic' && currentType() === 'Temperature') {
+          <div class="empty-state" style="padding: 2rem;">
+            <lucide-icon name="thermometer" [size]="40"></lucide-icon>
+            <p>Arithmetic is not supported for Temperature</p>
+          </div>
+        }
+
+      </div>
+      <!-- end main-card -->
+
+    </div>
+    <!-- end dash-grid -->
+
+  </div>
+</div>
