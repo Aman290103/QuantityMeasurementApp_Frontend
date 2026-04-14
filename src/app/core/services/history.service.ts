@@ -1,29 +1,42 @@
-// ============================================================
-// Quantity Nexus – HistoryService  (UC20 Angular)
-//
-// UC19 → Angular mapping:
-//   DOM innerHTML     → Signal + *ngFor template loop
-//   lucide.createIcons() → LucideAngularModule handles icons declaratively
-//   showToast()       → ToastService
-// ============================================================
-
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HistoryItem } from '../models/models';
 import { ToastService } from './toast.service';
+import { MeasurementService } from './measurement.service';
 
 @Injectable({ providedIn: 'root' })
 export class HistoryService {
-  // Angular Signal for reactive history state
-  private _items = signal<HistoryItem[]>(
-    JSON.parse(localStorage.getItem('history') ?? '[]')
-  );
+  private measurementSvc = inject(MeasurementService);
+  private toast = inject(ToastService);
 
-  // Public computed view for templates (read-only)
+  private _items = signal<HistoryItem[]>([]);
   readonly items = computed(() => this._items());
 
-  constructor(private toast: ToastService) {}
+  constructor() {
+    this.refresh();
+  }
 
-  // ── Add ────────────────────────────────────────────────────────────────────
+  // ── Refresh from Backend ───────────────────────────────────────────────────
+  refresh(): void {
+    this.measurementSvc.getAllHistory().subscribe({
+      next: (dtos) => {
+        // Map backend DTOs to HistoryItem interface
+        const items: HistoryItem[] = dtos.map(d => ({
+          id: Math.random(), // Unique ID for trackBy
+          type: d.thisMeasurementType.replace('Unit', ''),
+          from: `${d.thisValue} ${d.thisUnit}`,
+          to: d.operation === 'COMPARE' 
+              ? `${d.thatValue} ${d.thatUnit} (${d.resultString === 'true' ? 'Equal' : 'Not Equal'})`
+              : `${d.resultValue?.toFixed(3)} ${d.resultUnit || d.thisUnit}`,
+          time: new Date().toLocaleTimeString(),
+          date: new Date().toLocaleDateString()
+        }));
+        this._items.set(items.reverse()); // Show newest first
+      },
+      error: () => this.toast.show('Failed to load history from server', 'error')
+    });
+  }
+
+  // ── Add (Local placeholder for instant UI, will be synced on next refresh) ──
   add(type: string, from: string, to: string): void {
     const item: HistoryItem = {
       id: Date.now(),
@@ -31,9 +44,7 @@ export class HistoryService {
       time: new Date().toLocaleTimeString(),
       date: new Date().toLocaleDateString()
     };
-    // Prepend & keep last 50  (same as UC19)
-    const updated = [item, ...this._items().slice(0, 49)];
-    this._persist(updated);
+    this._items.update(prev => [item, ...prev].slice(0, 100));
   }
 
   // ── Export ─────────────────────────────────────────────────────────────────
@@ -46,10 +57,7 @@ export class HistoryService {
     this.toast.show('Generating Nexus Report…', 'info');
 
     try {
-      const json = await new Promise<string>(res =>
-        setTimeout(() => res(JSON.stringify(this._items(), null, 2)), 1000)
-      );
-
+      const json = JSON.stringify(this._items(), null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const url  = URL.createObjectURL(blob);
       const a    = Object.assign(document.createElement('a'), {
@@ -66,12 +74,12 @@ export class HistoryService {
 
   // ── Clear ──────────────────────────────────────────────────────────────────
   clear(): void {
-    this._persist([]);
-    this.toast.show('History cleared successfully', 'success');
-  }
-
-  private _persist(items: HistoryItem[]): void {
-    localStorage.setItem('history', JSON.stringify(items));
-    this._items.set(items);
+    this.measurementSvc.clearHistory().subscribe({
+      next: () => {
+        this._items.set([]);
+        this.toast.show('History cleared from database', 'success');
+      },
+      error: () => this.toast.show('Failed to clear database history', 'error')
+    });
   }
 }

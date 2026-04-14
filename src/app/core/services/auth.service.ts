@@ -15,13 +15,13 @@ import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
 import { User, LoginPayload, RegisterPayload, AuthResponse } from '../models/models';
 import { ToastService } from './toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // .NET backend base URL – same as UC19 auth.js
-  private readonly apiUrl = 'http://127.0.0.1:5076/api/v1/auth';
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
 
   // Angular Signals – reactive auth state (replaces UC19's property + DOM update)
   private _user = signal<User | null>(

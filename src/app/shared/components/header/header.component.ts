@@ -37,11 +37,18 @@ import { AuthService }                                 from '../../../core/servi
         </a>
       </nav>
 
-      <!-- Logout (Event handling in template) -->
-      <button class="btn btn-ghost" (click)="auth.logout()">
-        <lucide-icon name="log-out" [size]="18"></lucide-icon>
-        <span>Logout</span>
-      </button>
+      <!-- Auth actions (Conditional rendering to show Sign In for Guests) -->
+      @if (auth.isLoggedIn()) {
+        <button class="btn btn-ghost" (click)="auth.logout()">
+          <lucide-icon name="log-out" [size]="18"></lucide-icon>
+          <span>Logout</span>
+        </button>
+      } @else {
+        <a routerLink="/login" class="btn btn-ghost">
+          <lucide-icon name="log-in" [size]="18"></lucide-icon>
+          <span>Sign In</span>
+        </a>
+      }
 
     </header>
   `
