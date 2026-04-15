@@ -1,0 +1,101 @@
+<!-- ============================================================
+     Quantity Nexus – Login Template  (UC20 Angular)
+     UC19 equivalent: login.html
+     Angular concepts: Template-driven form binding, ngSubmit,
+     conditional rendering (@if), dynamic class binding ([class])
+     ============================================================ -->
+
+<div class="auth-page-wrap">
+  <div class="container">
+    <div class="auth-wrapper glass-card">
+
+      <!-- Logo -->
+      <div class="auth-header">
+        <div class="logo">
+          <lucide-icon name="scale" [size]="48"></lucide-icon>
+          <h1>Quantity<span>Nexus</span></h1>
+        </div>
+      </div>
+
+      <!-- Login Form  (ReactiveFormsModule replaces UC19 plain HTML form + JS) -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-with-icon">
+            <lucide-icon name="mail" [size]="18"></lucide-icon>
+            <input
+              id="login-email"
+              type="email"
+              class="form-control"
+              placeholder="your@email.com"
+              formControlName="email"
+              [class.ng-invalid]="email.invalid && email.touched">
+          </div>
+          <!-- Conditional rendering: inline validation error -->
+          @if (email.invalid && email.touched) {
+            <span class="error-msg">
+              {{ email.hasError('required') ? 'Email is required' : 'Enter a valid email' }}
+            </span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="input-with-icon">
+            <lucide-icon name="lock" [size]="18"></lucide-icon>
+            <input
+              id="login-password"
+              type="password"
+              class="form-control"
+              placeholder="••••••••"
+              formControlName="password"
+              [class.ng-invalid]="password.invalid && password.touched">
+          </div>
+          @if (password.invalid && password.touched) {
+            <span class="error-msg">
+              {{ password.hasError('required') ? 'Password is required' : 'Min 6 characters' }}
+            </span>
+          }
+        </div>
+
+        <!-- Utils row -->
+        <div class="form-utils">
+          <label class="remember-me">
+            <input type="checkbox" (change)="remember.set(!remember())">
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary full-width" [disabled]="loading()">
+          @if (loading()) {
+            <span>Signing in…</span>
+          } @else {
+            <span>Sign In</span>
+            <lucide-icon name="arrow-right" [size]="18"></lucide-icon>
+          }
+        </button>
+
+      </form>
+
+      <!-- Footer -->
+      <div class="auth-footer">
+        <p>Don't have an account? <a routerLink="/register">Sign up for free</a></p>
+        <div class="divider"><span>OR</span></div>
+        <div class="social-btns">
+          <button class="btn btn-outline">
+            <lucide-icon name="mail" [size]="16"></lucide-icon> Google
+          </button>
+          <button class="btn btn-outline">
+            <lucide-icon name="facebook" [size]="16"></lucide-icon> Facebook
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

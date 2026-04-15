@@ -1,0 +1,77 @@
+<!-- ============================================================
+     Quantity Nexus – History Template  (UC20 Angular)
+     UC19 equivalent: history.html + history.js render()
+
+     Angular concepts:
+       @for – replaces innerHTML template string loop
+       @if  – replaces empty-state conditional
+       Component composition: <app-header>
+       Event handling: (click) for export/clear
+     ============================================================ -->
+
+<div class="dash-page-wrap">
+  <div class="container">
+
+    <!-- Shared Header -->
+    <app-header
+      [firstName]="authService.firstName()"
+      [initials]="authService.initials()"
+      [isLoggedIn]="authService.isLoggedIn()"
+      (authClick)="onAuthClick()">
+    </app-header>
+
+    <!-- History Card -->
+    <div class="history-page-card glass-card">
+
+      <!-- Header row -->
+      <div class="history-header">
+        <div>
+          <h2>Activity Records</h2>
+          <p class="subtitle">Detailed log of your recent measurements</p>
+        </div>
+        <div class="hist-actions">
+          <button class="btn btn-primary" (click)="exportHistory()">
+            <lucide-icon name="download" [size]="18"></lucide-icon>
+            Export Report
+          </button>
+          <button class="btn btn-outline sm" (click)="clearHistory()">
+            Clear Activity Log
+          </button>
+        </div>
+      </div>
+
+      <!-- List / Empty state -->
+      @if (historyService.items().length === 0) {
+        <div class="empty-state">
+          <lucide-icon name="inbox" [size]="64"></lucide-icon>
+          <p>No activity records found</p>
+        </div>
+      } @else {
+        <ul class="history-list">
+          @for (item of historyService.items(); track item.id) {
+            <li class="history-item">
+
+              <div class="hist-main">
+                <span class="badge">{{ item.type }}</span>
+                <span class="hist-val">{{ item.from }}</span>
+                <span class="hist-arrow">
+                  <lucide-icon name="chevrons-right" [size]="16"></lucide-icon>
+                </span>
+                <span class="hist-val success">{{ item.to }}</span>
+              </div>
+
+              <div class="hist-meta">
+                <span class="hist-label">{{ item.date }}</span>
+                <span class="hist-label">{{ item.time }}</span>
+              </div>
+
+            </li>
+          }
+        </ul>
+      }
+
+    </div>
+    <!-- end glass-card -->
+
+  </div>
+</div>

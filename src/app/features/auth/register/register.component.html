@@ -1,0 +1,126 @@
+<!-- ============================================================
+     Quantity Nexus – Register Template  (UC20 Angular)
+     UC19 equivalent: register.html
+     ============================================================ -->
+
+<div class="auth-page-wrap">
+  <div class="container">
+    <div class="auth-wrapper glass-card">
+
+      <!-- Logo -->
+      <div class="auth-header">
+        <div class="logo">
+          <lucide-icon name="scale" [size]="48"></lucide-icon>
+          <h1>Quantity<span>Nexus</span></h1>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Row 1: Full Name + Mobile -->
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-with-icon">
+              <lucide-icon name="user" [size]="18"></lucide-icon>
+              <input type="text" class="form-control"
+                     placeholder="Jane Doe"
+                     formControlName="fullName">
+            </div>
+            @if (fullName.invalid && fullName.touched) {
+              <span class="error-msg">
+                {{ fullName.hasError('required') ? 'Name is required' : 'Min 2 characters' }}
+              </span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <div class="input-with-icon">
+              <lucide-icon name="phone" [size]="18"></lucide-icon>
+              <input type="tel" class="form-control"
+                     placeholder="+1 555-0000"
+                     formControlName="mobile">
+            </div>
+            @if (mobile.invalid && mobile.touched) {
+              <span class="error-msg">Enter a valid mobile number</span>
+            }
+          </div>
+        </div>
+
+        <!-- Row 2: Email + Password -->
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Email Address</label>
+            <div class="input-with-icon">
+              <lucide-icon name="mail" [size]="18"></lucide-icon>
+              <input type="email" class="form-control"
+                     placeholder="jane@email.com"
+                     formControlName="email">
+            </div>
+            @if (email.invalid && email.touched) {
+              <span class="error-msg">
+                {{ email.hasError('required') ? 'Email is required' : 'Enter a valid email' }}
+              </span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-with-icon">
+              <lucide-icon name="lock" [size]="18"></lucide-icon>
+              <input type="password" class="form-control"
+                     placeholder="••••••••"
+                     formControlName="password">
+            </div>
+            @if (password.invalid && password.touched) {
+              <span class="error-msg">
+                {{ password.hasError('required') ? 'Password required' : 'Min 6 characters' }}
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="input-with-icon">
+            <lucide-icon name="shield-check" [size]="18"></lucide-icon>
+            <input type="password" class="form-control"
+                   placeholder="••••••••"
+                   formControlName="confirmPassword">
+          </div>
+          @if (form.hasError('mismatch') && confirmPassword.touched) {
+            <span class="error-msg">Passwords do not match</span>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary full-width" [disabled]="loading()">
+          @if (loading()) {
+            <span>Creating account…</span>
+          } @else {
+            <span>Create Free Account</span>
+            <lucide-icon name="user-plus" [size]="18"></lucide-icon>
+          }
+        </button>
+
+      </form>
+
+      <!-- Footer -->
+      <div class="auth-footer">
+        <p>Already have an account? <a routerLink="/login">Sign in here</a></p>
+        <div class="divider"><span>OR</span></div>
+        <div class="social-btns">
+          <button class="btn btn-outline">
+            <lucide-icon name="mail" [size]="16"></lucide-icon> Google
+          </button>
+          <button class="btn btn-outline">
+            <lucide-icon name="facebook" [size]="16"></lucide-icon> Facebook
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
