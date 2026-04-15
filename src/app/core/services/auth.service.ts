@@ -62,7 +62,14 @@ export class AuthService {
         this.toast.show(`Welcome, ${res.fullName}!`, 'success');
       }),
       catchError((err: HttpErrorResponse) => {
-        const msg = err.error?.message ?? 'Login failed. Please try again.';
+        let msg = 'Login failed. Please try again.';
+        if (err.status === 0) {
+          msg = 'Cannot connect to API. Please check if the backend is running and CORS is allowed.';
+        } else if (err.error?.message) {
+          msg = err.error.message;
+        } else if (err.error?.errors) {
+          msg = Object.values(err.error.errors).flat().join(', ');
+        }
         this.toast.show(msg, 'error');
         return throwError(() => new Error(msg));
       })
@@ -81,7 +88,14 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, payload).pipe(
       tap(() => this.toast.show('Account created! Please sign in.', 'success')),
       catchError((err: HttpErrorResponse) => {
-        const msg = err.error?.message ?? 'Registration failed.';
+        let msg = 'Registration failed.';
+        if (err.status === 0) {
+          msg = 'Cannot connect to API. Please check if the backend is running and CORS is allowed.';
+        } else if (err.error?.message) {
+          msg = err.error.message;
+        } else if (err.error?.errors) {
+          msg = Object.values(err.error.errors).flat().join(', ');
+        }
         this.toast.show(msg, 'error');
         return throwError(() => new Error(msg));
       })
