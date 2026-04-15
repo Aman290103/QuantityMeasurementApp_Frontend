@@ -14,9 +14,9 @@ export interface LoginPayload {
 }
 
 export interface RegisterPayload {
-  FullName: string;   // .NET backend expects PascalCase
-  Email: string;
-  Password: string;
+  fullName: string;
+  email: string;
+  password: string;
 }
 
 export interface AuthResponse {
