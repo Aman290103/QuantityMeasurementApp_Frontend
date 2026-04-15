@@ -73,9 +73,9 @@ export class AuthService {
   register(data: { fullName: string; email: string; password: string }): Observable<unknown> {
     // Mapping to .NET RegisterDTO  (same as UC19 signup())
     const payload: RegisterPayload = {
-      FullName: data.fullName,
-      Email: data.email,
-      Password: data.password
+      fullName: data.fullName,
+      email: data.email,
+      password: data.password
     };
 
     return this.http.post(`${this.apiUrl}/register`, payload).pipe(

@@ -38,7 +38,6 @@ import { AuthService }            from '../../../core/services/auth.service';
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
             <!-- Form Grid – 2 columns (Component composition + SCSS grid) -->
-            <div class="form-grid">
               <div class="form-group">
                 <label>Full Name</label>
                 <div class="input-with-icon">
@@ -50,16 +49,6 @@ import { AuthService }            from '../../../core/services/auth.service';
                   <span class="error-msg">Full name is required</span>
                 }
               </div>
-
-              <div class="form-group">
-                <label>Mobile Number</label>
-                <div class="input-with-icon">
-                  <lucide-icon name="phone" [size]="18"></lucide-icon>
-                  <input type="tel" class="form-control" placeholder="+1 555-0000"
-                         formControlName="mobile">
-                </div>
-              </div>
-            </div>
 
             <div class="form-grid">
               <div class="form-group">
@@ -124,7 +113,6 @@ export class RegisterComponent {
 
   form = this.fb.group({
     fullName: ['', Validators.required],
-    mobile:   [''],
     email:    ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
