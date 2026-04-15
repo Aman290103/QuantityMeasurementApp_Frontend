@@ -23,10 +23,10 @@ export class UnitService {
 
   // Conversion factor maps — same as UC19 app.js
   readonly units: Record<UnitType, Record<string, number>> = {
-    Length:      { Meters: 1, Kilometers: 1000, Centimeters: 0.01, Millimeters: 0.001, Inch: 0.0254, Feet: 0.3048 },
-    Weight:      { Grams: 1, Kilograms: 1000, Tonnes: 1_000_000, Pounds: 453.592, Ounces: 28.3495 },
+    Length:      { Meter: 1, Kilometer: 1000, Centimeter: 0.01, Inch: 0.0254, Yard: 0.9144, Feet: 0.3048 },
+    Weight:      { Gram: 1, Kilogram: 1000, Pound: 453.592 },
     Temperature: { Celsius: 1, Fahrenheit: 1, Kelvin: 1 }, // handled via _convertTemp()
-    Volume:      { Litre: 1, Millilitre: 0.001, Gallon: 3.78541 },
+    Volume:      { Litre: 1, Millilitre: 0.001, Gallon: 3.78541, Quart: 0.946353, Pint: 0.473176, Cup: 0.236588 },
     Area:        { SquareMeter: 1, SquareFoot: 0.092903, Acre: 4046.86, SquareInch: 0.00064516 },
     Angle:       { Degree: 1, Radian: 180 / Math.PI, Gradian: 0.9 },
     Speed:       { MetersPerSecond: 1, KilometersPerHour: 1 / 3.6, MilesPerHour: 0.44704, Knots: 0.514444 },
