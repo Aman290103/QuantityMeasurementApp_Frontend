@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://quantitymeasurementapp-api-rdwr.onrender.com/api/v1'
+  apiUrl: 'https://quantitymeasurementapp-4ys1.onrender.com/api/v1'
 };
