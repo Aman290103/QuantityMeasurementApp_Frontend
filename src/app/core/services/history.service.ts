@@ -1,22 +1,27 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HistoryItem } from '../models/models';
-import { ToastService } from './toast.service';
+import { ToastService }       from './toast.service';
 import { MeasurementService } from './measurement.service';
+import { AuthService }        from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class HistoryService {
+  private auth           = inject(AuthService);
   private measurementSvc = inject(MeasurementService);
-  private toast = inject(ToastService);
+  private toast          = inject(ToastService);
 
   private _items = signal<HistoryItem[]>([]);
   readonly items = computed(() => this._items());
 
   constructor() {
-    this.refresh();
+    if (this.auth.isLoggedIn()) {
+      this.refresh();
+    }
   }
 
   // ── Refresh from Backend ───────────────────────────────────────────────────
   refresh(): void {
+    if (!this.auth.isLoggedIn()) return;
     this.measurementSvc.getAllHistory().subscribe({
       next: (dtos) => {
         // Map backend DTOs to HistoryItem interface

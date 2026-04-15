@@ -9,7 +9,7 @@
 // ============================================================
 
 import {
-  Component, inject, signal, ChangeDetectionStrategy
+  Component, inject, signal, ChangeDetectionStrategy, OnInit
 } from '@angular/core';
 import { CommonModule }           from '@angular/common';
 import { RouterLink }             from '@angular/router';
@@ -104,10 +104,16 @@ import { AuthService }            from '../../../core/services/auth.service';
     </div>
   `
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   private fb     = inject(FormBuilder);
   private auth   = inject(AuthService);
   private router = inject(Router);
+
+  ngOnInit(): void {
+    if (this.auth.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   loading = signal(false);
 
